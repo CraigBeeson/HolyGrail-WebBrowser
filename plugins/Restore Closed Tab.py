@@ -22,6 +22,8 @@ def main(HolyGrail):
 def end(HolyGrail):
 	#removes added functionality
 	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"Page").findChild(QAction,"ROT").deleteLater()
+	if len(HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"Page").actions()) == 1:
+		HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"Page").deleteLater()
 	HolyGrail.browser.tabClosed.disconnect(savePage)
 #saves url when a tab is closed
 def savePage(url):

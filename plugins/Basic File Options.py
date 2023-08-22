@@ -11,13 +11,14 @@ def main(HolyGrail):
 	global app
 	app = HolyGrail
 	#adds menu labeled file to the menu bar
-	HolyGrail.findChild(QMenuBar,"Util Bar").addMenu(QMenu("File",HolyGrail.findChild(QMenuBar,"Util Bar"),objectName="File"))
+	if HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File") == None:
+		HolyGrail.findChild(QMenuBar,"Util Bar").addMenu(QMenu("File",HolyGrail.findChild(QMenuBar,"Util Bar"),objectName="File"))
 	#adds the menu item to choose download destination if youre unhappy with the default
-	fileAction = QAction("Download Destination",HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File"))
+	fileAction = QAction("Download Destination",HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File"),objectName="Down Dest")
 	fileAction.triggered.connect(changeDownloadDirectory)
 	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").addAction(fileAction)
 	#a convenient way to open html files instead of typing the html file path into the browser
-	fileAction0 = QAction("Open html file",HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File"))
+	fileAction0 = QAction("Open html file",HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File"),objectName="Open html")
 	fileAction0.triggered.connect(loadHTMLFile)
 	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").addAction(fileAction0)
 	#if this plug-in was used previously then it loads the previously set download directory
@@ -26,7 +27,10 @@ def main(HolyGrail):
 
 def end(HolyGrail):
 	#destroys the file menu options
-	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").deleteLater()
+	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").findChild(QAction,"Down Dest").deleteLater()
+	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").findChild(QAction,"Open html").deleteLater()
+	if len(HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").actions()) == 2:
+		HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").deleteLater()
 #function for changing download directory
 def changeDownloadDirectory():
 	global app

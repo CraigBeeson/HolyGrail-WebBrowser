@@ -25,6 +25,8 @@ def end(HolyGrail):
 	global app
 	app = None
 	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"Page").findChild(QAction,"Set Home").deleteLater()
+	if len(HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"Page").actions()) == 1:
+		HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"Page").deleteLater()
 	HolyGrail.browser.home = QUrl("https://www.python.org/")
 #sets home page to the current active tab's url
 def setHomePage():
