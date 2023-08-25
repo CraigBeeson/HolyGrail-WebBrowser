@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
 		self.UtilityFuncs = Utility
 		#status bar
 		self.setStatusBar(QStatusBar(objectName="Stat Bar"))
-		self.findChild(QStatusBar,"Stat Bar").addWidget(QLabel("Version: 0.1.1"))
+		self.findChild(QStatusBar,"Stat Bar").addWidget(QLabel("Version: 0.2.0"))
 		#utility bar
 		self.setMenuBar(QMenuBar(objectName="Util Bar"))
 		#settings button

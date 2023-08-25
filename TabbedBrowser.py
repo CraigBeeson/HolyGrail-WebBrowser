@@ -14,8 +14,13 @@ class TabbedBrowser(QTabWidget):
 		#checks for and creates downloads directory
 		if not os.path.isdir(os.getcwd()+"\\Downloads"):
 			os.mkdir(os.getcwd()+"\\Downloads")
+		if not os.path.isdir(os.getcwd()+"\\Data"):
+			os.mkdir(os.getcwd()+"\\Data")
 		#sets default download path to the above directory
 		self.downloadDestination = os.getcwd()+"\\Downloads\\"
+		#network manager
+		self.profile = QWebEngineProfile(self)
+		self.profile.downloadRequested.connect(self.downloadHandler)
 		#add close buttons for tabs
 		self.setTabsClosable(True)
 		self.currentChanged.connect(self.focusChanged)
@@ -53,13 +58,13 @@ class TabbedBrowser(QTabWidget):
 	def newTab(self,url=""):
 		#makes tab with new webengine view
 		tab = QWebEngineView()
+		tab.setPage(QWebEnginePage(self.profile, tab))
 		if url:
 			tab.setUrl(url)
 		#set up tab for necessary functionality
 		tab.urlChanged.connect(self.urlChange)
 		tab.loadFinished.connect(self.updateTitle)
 		tab.createWindow = self.handleNewWindow
-		tab.page().profile().downloadRequested.connect(self.downloadHandler)
 		self.addTab(tab,"new tab")
 		#gives focus to new tab
 		self.setCurrentWidget(tab)
