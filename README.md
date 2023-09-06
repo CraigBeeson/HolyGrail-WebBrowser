@@ -1,4 +1,4 @@
-# HolyGrail-WebBrowser v0.2.0
+# HolyGrail-WebBrowser v0.3.0
 A customizeable browser written in python using PyQt5.
 # Details
 This project is a web browser created using PyQt5 with python.
