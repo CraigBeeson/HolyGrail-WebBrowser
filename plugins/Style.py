@@ -26,6 +26,7 @@ QTabBar::tab:selected{background:dimgray;color:black;}
 QToolTip{color:lightgray;background:darkslategray;border:2px solid black;}
 QStatusBar{color:lightgray;background:darkslategray;}
 QProgressBar{color:lightgray;}
+QPlainTextEdit{background-color:darkslategray;color:lightgray}
 """
 #list of colors for user to pick from
 colors = ["aliceblue",
