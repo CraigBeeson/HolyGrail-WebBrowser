@@ -10,6 +10,8 @@ app = None
 def main(HolyGrail):
 	global app
 	app = HolyGrail
+	if not app.UtilityFuncs.getSetting("EditorFilePath"):
+		app.UtilityFuncs.updateSettings("EditorFilePath", os.getcwd())
 	#adds menu labeled file to the menu bar
 	if HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File") == None:
 		HolyGrail.findChild(QMenuBar,"Util Bar").addMenu(QMenu("File",HolyGrail.findChild(QMenuBar,"Util Bar"),objectName="File"))
@@ -19,14 +21,28 @@ def main(HolyGrail):
 	devAction = QAction("Edit HTML File",HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File"),objectName="Edit html")
 	devAction.triggered.connect(loadHTMLFile)
 	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").addAction(devAction)
+	devAction0 = QAction("Edit New File",HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File"),objectName="Edit new html")
+	devAction0.triggered.connect(openNewFile)
+	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").addAction(devAction0)
 
 #removes the functionality
 def end(HolyGrail):
 	if HolyGrail.findChild(QDockWidget,"Editor Dock") != None:
 		HolyGrail.findChild(QDockWidget,"Editor Dock").deleteLater()
 	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").findChild(QAction, "Edit html").deleteLater()
+	HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").findChild(QAction, "Edit new html").deleteLater()
 	if len(HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").actions()) == 1:
 		HolyGrail.findChild(QMenuBar,"Util Bar").findChild(QMenu,"File").deleteLater()
+
+def openNewFile():
+	global app
+	if app.findChild(QDockWidget,"Editor Dock") != None:
+		app.findChild(QDockWidget,"Editor Dock").tabs.newTab()
+	else:
+		#creates a new tab with associated file and sets up the dock widget
+		editDock = EditorDock.EditorDock("HolyGrail-Editor",app,objectName="Editor Dock")
+		editDock.tabs.newTab()
+		app.addDockWidget(Qt.BottomDockWidgetArea,editDock)
 
 def loadHTMLFile():
 	global app
@@ -45,6 +61,6 @@ def loadHTMLFile():
 		else:
 			#creates a new tab with associated file and sets up the dock widget
 			editDock = EditorDock.EditorDock("HolyGrail-Editor",app,objectName="Editor Dock")
-			editDock.tabs.newTab(file)
+			editDock.tabs.newTab(file=file)
 			app.addDockWidget(Qt.BottomDockWidgetArea,editDock)
 	fileDialog.deleteLater()

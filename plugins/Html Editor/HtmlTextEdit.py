@@ -22,9 +22,21 @@ class HtmlEditor(QPlainTextEdit):
 		self.highlightCurrentLine()
 	#saves the contents of the text editor to the associated file
 	def saveText(self):
-		with open(self.file,"w") as f:
-			f.write(self.toPlainText())
-			f.close()
+		if self.file:
+			with open(self.file,"w") as f:
+				f.write(self.toPlainText())
+				f.close()
+		else:
+			fileDialog = QFileDialog(self,"Holy Grail - Choose HTML Page",self.parent().parent().filePath)
+			fileDialog.setFileMode(QFileDialog.AnyFile)
+			if fileDialog.exec_():
+				self.file = fileDialog.selectedFiles()[0]
+				with open(self.file,"w") as f:
+					f.write(self.toPlainText())
+					f.close()
+			self.parent().parent().setTabText(self.parent().currentIndex(),self.file.split("/")[-1])
+			self.parent().parent().updateFilePath.emit("/".join(self.file.split("/")[0:len(self.file.split("/"))-1]))
+
 #code below is copied from https://doc.qt.io/qt-5/qtwidgets-widgets-codeeditor-example.html
 #######################################################
 	def lineNumberAreaWidth(self):
