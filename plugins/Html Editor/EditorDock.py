@@ -18,7 +18,7 @@ class EditorDock(QDockWidget):
 		editorGroup.setLayout(box)
 		self.setWidget(editorGroup)
 		self.setObjectName(kwargs["objectName"])
-	
+	#updates file path
 	def updateFP(self,file):
 		self.parent().UtilityFuncs.updateSettings("EditorFilePath", file)
 		self.tabs.filePath = file

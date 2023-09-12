@@ -8,6 +8,7 @@ class TabbedBrowser(QTabWidget):
 
 	urlChanged = pyqtSignal(QUrl)
 	tabClosed = pyqtSignal(QUrl)
+	JSErrorMsgSig = pyqtSignal(str)
 
 	def __init__(self):
 		super(TabbedBrowser, self).__init__()
@@ -59,6 +60,7 @@ class TabbedBrowser(QTabWidget):
 		#makes tab with new webengine view
 		tab = QWebEngineView()
 		tab.setPage(QWebEnginePage(self.profile, tab))
+		tab.page().javaScriptConsoleMessage = self.JSErrorMsg
 		if url:
 			tab.setUrl(url)
 		#set up tab for necessary functionality
@@ -119,3 +121,20 @@ class TabbedBrowser(QTabWidget):
 	#reloads the current qwebengineview
 	def reload(self):
 		self.currentWidget().reload()
+	
+	def JSErrorMsg(self, level="0", message="", lineNumber=0, sourceID=""):
+		msg = ""
+		if level == 0:
+			msg = message + " on line " + str(lineNumber) + ".\n"
+			if sourceID:
+				msg += "Info from " + sourceID + "."
+		elif level == 1:
+			msg = message + " on line " + str(lineNumber) + ".\n"
+			if sourceID:
+				msg += "Warning from " + sourceID + ".\n"
+		else:
+			msg = message + " on line " + str(lineNumber) + ".\n"
+			if sourceID:
+				msg += "Error from " + sourceID + ".\n"
+		print(msg)
+		self.JSErrorMsgSig.emit(msg)

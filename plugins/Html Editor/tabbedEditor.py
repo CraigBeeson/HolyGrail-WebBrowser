@@ -12,6 +12,7 @@ class tabbedEditor(QTabWidget):
 	def __init__(self, *args, **kwargs):
 		super(tabbedEditor, self).__init__()
 		#gives close tab button and then functionality for that button
+		self.setParent(args[0])
 		self.filePath = ""
 		self.setTabsClosable(True)
 		self.tabCloseRequested.connect(self.closeTab)
@@ -31,9 +32,29 @@ class tabbedEditor(QTabWidget):
 		loadAction = QAction("Load File",File)
 		loadAction.triggered.connect(self.loadFile)
 		File.addAction(loadAction)
+		debugAction = QAction("Docked Debugger",File)
+		debugAction.triggered.connect(self.debugConsole)
+		File.addAction(debugAction)
 		editorMenu.addMenu(File)
 		self.setCornerWidget(editorMenu, Qt.TopRightCorner)
-		
+	#creates a console to view debugging information without having to tab over to the terminal
+	def debugConsole(self,signal):
+		if (self.parent().parent().parent().findChild(QDockWidget,"Debugger") == None):
+			debugDock = QDockWidget("Debugger",self.parent().parent().parent(),objectName="Debugger")
+			box = QVBoxLayout()
+			#uses a plaintextedit to display the debug info
+			debugger = QPlainTextEdit()
+			#no need to edit debug info
+			debugger.setReadOnly(True)
+			box.addWidget(debugger)
+			debugGroup = QGroupBox()
+			debugGroup.setLayout(box)
+			debugDock.setWidget(debugGroup)
+			#connects to the browsers signal that outputs the debugger info
+			self.parent().parent().parent().browser.JSErrorMsgSig.connect(debugger.appendPlainText)
+			#adds dockwidget to main app
+			self.parent().parent().parent().addDockWidget(Qt.LeftDockWidgetArea,debugDock)
+	#loads file for editing without opening a browser tab
 	def loadFile(self):
 		fileDialog = QFileDialog(self,"Holy Grail - Choose HTML Page",self.filePath)
 		fileDialog.setFileMode(QFileDialog.AnyFile)
@@ -42,8 +63,7 @@ class tabbedEditor(QTabWidget):
 	#triggers save text of the current active widget
 	def saveText(self):
 		self.currentWidget().saveText()
-	#creates new tab with associated file
-	#plan to update for if no file(i.e. open new file)
+	#creates new tab for editing, either with an associated file or none if opening a new blank tab
 	def newTab(self, file=""):
 		if file:
 			textEdit = HtmlTextEdit.HtmlEditor()
@@ -58,15 +78,24 @@ class tabbedEditor(QTabWidget):
 		else:
 			textEdit = HtmlTextEdit.HtmlEditor()
 			textEdit.setPlainText("")
+			#if there are tabs open, it iterates through to create serialized new tabs
+			#i.e. 'new 1' 'new 2' etc
+			#if there are tabs in the editor
 			if self.count():
+				#since we are starting tab naming at 1 we add +1 to the range
+				#in case all open tabs are 'new n' we'll need to loop one more time
+				#this results in +2 to the range
 				for i in range(1,self.count()+2):
+					#name is valid unless it is found
 					isValid = True
 					for j in range(0,self.count()):
 						if self.tabText(j) == "new " + str(i):
 							isValid = False
+							break
 					if isValid:
 						self.addTab(textEdit,"new " + str(i))
 						break
+			#if editor has no tabs then a 'new 1' tab is created
 			else:
 				self.addTab(textEdit,"new 1")
 	#closes a tab

@@ -22,20 +22,27 @@ class HtmlEditor(QPlainTextEdit):
 		self.highlightCurrentLine()
 	#saves the contents of the text editor to the associated file
 	def saveText(self):
+		#if editor has an associated file
 		if self.file:
+			#writes contents to associated file
 			with open(self.file,"w") as f:
 				f.write(self.toPlainText())
 				f.close()
+		#no associated file
 		else:
+			#creates dialogue for choosing where to save/file name
 			fileDialog = QFileDialog(self,"Holy Grail - Choose HTML Page",self.parent().parent().filePath)
 			fileDialog.setFileMode(QFileDialog.AnyFile)
 			if fileDialog.exec_():
 				self.file = fileDialog.selectedFiles()[0]
+				#writes to selected file
 				with open(self.file,"w") as f:
 					f.write(self.toPlainText())
 					f.close()
-			self.parent().parent().setTabText(self.parent().currentIndex(),self.file.split("/")[-1])
-			self.parent().parent().updateFilePath.emit("/".join(self.file.split("/")[0:len(self.file.split("/"))-1]))
+				#updates the tab to say the file name
+				self.parent().parent().setTabText(self.parent().currentIndex(),self.file.split("/")[-1])
+				#updates the file path for the next new save
+				self.parent().parent().updateFilePath.emit("/".join(self.file.split("/")[0:len(self.file.split("/"))-1]))
 
 #code below is copied from https://doc.qt.io/qt-5/qtwidgets-widgets-codeeditor-example.html
 #######################################################

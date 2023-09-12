@@ -32,3 +32,35 @@ class HtmlHighlighter(QSyntaxHighlighter):
 		while i.hasNext():
 			match = i.next()
 			self.setFormat(match.capturedStart(), match.capturedLength(), stringFormat)
+		#format for text inside of " ' "
+		stringFormat = QTextCharFormat()
+		stringFormat.setForeground(QColor("mediumseagreen"))
+		expression = QRegularExpression("'.*'")
+		i = expression.globalMatch(text)
+		while i.hasNext():
+			match = i.next()
+			self.setFormat(match.capturedStart(), match.capturedLength(), stringFormat)
+		#format for script tags
+		stringFormat = QTextCharFormat()
+		stringFormat.setForeground(QColor("deepskyblue"))
+		expression = QRegularExpression("<script>.*</script>")
+		i = expression.globalMatch(text)
+		while i.hasNext():
+			match = i.next()
+			self.setFormat(match.capturedStart(), match.capturedLength(), stringFormat)
+		#format for php tags
+		stringFormat = QTextCharFormat()
+		stringFormat.setForeground(QColor("violet"))
+		expression = QRegularExpression("<?.*?>")
+		i = expression.globalMatch(text)
+		while i.hasNext():
+			match = i.next()
+			self.setFormat(match.capturedStart(), match.capturedLength(), stringFormat)
+		#format for html comments
+		stringFormat = QTextCharFormat()
+		stringFormat.setForeground(QColor("lightpink"))
+		expression = QRegularExpression("<!--.*-->")
+		i = expression.globalMatch(text)
+		while i.hasNext():
+			match = i.next()
+			self.setFormat(match.capturedStart(), match.capturedLength(), stringFormat)
