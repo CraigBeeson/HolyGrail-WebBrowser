@@ -38,7 +38,7 @@ class TabbedBrowser(QTabWidget):
 		self.newTabButton.setMinimumSize(QSize(25,24))
 		self.newTabButton.clicked.connect(self.newTabBtnPress)
 		#sets default home page
-		self.home = QUrl("https://www.python.org")
+		self.home = QUrl("https://www.python.org")#"https://www.python.org")
 		#creates new tab set to home
 		self.newTab(self.home)
 	#updates url to current page
