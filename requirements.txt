@@ -1,0 +1,8 @@
+requirements:
+	pyqt5
+	pyqtwebengine
+	pandas
+	matplotlib
+	keras
+	tensorflow
+	
