@@ -10,6 +10,7 @@ class GetStockLine(QLineEdit):
 	def __init__(self, *args, **kwargs):
 		super(GetStockLine, self).__init__()
 		self.setParent(args[0])
+		self.AI = args[1]
 		self.setObjectName(kwargs["objectName"])
 		self.setToolTip("Search for\n stock info.")
 		self.profile = QWebEngineProfile(self)
@@ -47,7 +48,7 @@ class GetStockLine(QLineEdit):
 	#deletes the progress bar when download is finished
 	def downloadFinished(self,progressBar,file):
 		progressBar.deleteLater()
-		Analyzer.Analyzer(file,self.parent().parent().parent())
+		Analyzer.Analyzer(file,self.parent().parent().parent(),self.AI)
 		self.scraper.setUrl(QUrl("https://www.google.com/"))
 	#keeps the progress bar up to date on the download progress
 	def updateDownloadProgress(self,recvd,total,progressBar):

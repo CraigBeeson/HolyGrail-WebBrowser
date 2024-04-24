@@ -8,7 +8,6 @@ import threading
 Just an AI I created based on the simple definition of nodes and weights
 This AI was more accurate when using a multiplier method vs just adding the weights
 Still it was a fun learning project, may return this to the multiplier method
-or just rewrite it with keras
 """
 
 class NeuralNetwork():

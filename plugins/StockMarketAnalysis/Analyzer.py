@@ -6,6 +6,8 @@ import sys
 import matplotlib
 import pickle
 
+from . import AIUsage
+
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
@@ -17,8 +19,10 @@ from PyQt5.QtWebEngineWidgets import *
 
 
 class Analyzer():
-	def __init__(self,file,app):
+	def __init__(self,file,app,AI):
+		#set up properties to use elsewhere
 		self.app = app
+		self.AI = AI
 		self.file = file
 		self.html = "<title>" + file.split("/")[-1] + "</title><br/><body style=\"background-color:rgb(0,0,0);color:rgb(0,125,0);max-width:960;margin:auto;\"><br/>"
 		self.fileContents = pandas.read_csv(file)
@@ -32,7 +36,7 @@ pandas.DataFrame(columns = self.columns0), pandas.DataFrame(columns = self.colum
 		self.setUpDays()
 		self.createOutputInfo()
 		self.saveOutput()
-		
+	#set up data based on day of the week
 	def setUpDays(self):
 		for i in range(0, len(self.fileContents)):
 			temp = self.fileContents["Date"][i].split('-')
@@ -50,8 +54,18 @@ self.fileContents["Volume"][i]
 			self.days0[day].loc[len(self.days0[day].index)] = [self.fileContents["Date"][i],self.fileContents["Open"][i],self.fileContents["High"][i],
 self.fileContents["Low"][i],self.fileContents["Close"][i],self.fileContents["Adj Close"][i],self.fileContents["Volume"][i]
 ]
+	#generates output info
 	def createOutputInfo(self):
 		self.html += "<br/>Disclaimer: THIS IS NOT FINANCIAL ADVICE!!!!!!!!!!!!!!!!<br/>\tUse this information at your own risk!<br/><br/><br/>"
+		#passes data to the useAI function to process the data and then generate
+		#a prediction from the ai
+		temp = AIUsage.useAI(self.AI,self.fileContents)
+		self.html += "<br/>AI Generated Predictions For The Next Business Day.<br/>"
+		self.html += "<br/>Open: " + str(temp[0][0])
+		self.html += "<br/>High: " + str(temp[0][1])
+		self.html += "<br/>Low: " + str(temp[0][2])
+		self.html += "<br/>Close: " + str(temp[0][3]) + "<br/>"
+		#print tables of the different days of the week
 		for i in range(0,len(self.days)):
 			self.html += self.dayNames[i]
 			self.html += "<br/>"
@@ -63,21 +77,13 @@ self.fileContents["Low"][i],self.fileContents["Close"][i],self.fileContents["Adj
 			self.html += "<br/>"
 			self.html += self.days[i].describe().to_html()
 			self.html += "<br/>"
-		AIObject = pickle.load(open(os.getcwd()+"/plugins/StockMarketAnalysis/StockAI.ai",'rb'))
-		AIObject.loadDataTable(self.file)
-		temp = AIObject.makeGuess(len(self.fileContents))
-		AIObject.resetNeurons()
-		self.html += "<br/>AI Generated Predictions For The Next Business Day.<br/>"
-		self.html += "<br/>Open: " + str(temp[0])
-		self.html += "<br/>Low: " + str(temp[1])
-		self.html += "<br/>High: " + str(temp[2])
-		self.html += "<br/>Close: " + str(temp[3])
-		self.html += "<br/>Volume: " + str(temp[4])
+		#delete graphs currently up
 		try:
 			app.findChild(QDockWidget,"Graph Dock").close()
 			app.findChild(QDockWidget,"Graph Dock").deleteLater()
 		except:
 			pass
+		#generate graphs
 		canvasArray = []
 		graphDocks = []
 		for i in range(1,len(self.columns)):
@@ -102,13 +108,13 @@ self.fileContents["Low"][i],self.fileContents["Close"][i],self.fileContents["Adj
 			graphDocks.append(QDockWidget("Graph of " + re.sub(".csv","",self.file.split("/")[-1]) + "'s " + self.columns0[i],self.app,objectName="Graph Dock"))
 			graphDocks[i-1].setWidget(canvasArray[i-1])
 			self.app.addDockWidget(Qt.RightDockWidgetArea,graphDocks[i-1])
-		
+	#saves the html content so view later
 	def saveOutput(self):
 		self.html += "</body>"
 		with open(os.getcwd()+"\\StockFiles\\" + re.sub(".csv", ".html", self.file.split("/")[-1]),"w") as f:
 			f.write(self.html)
 		self.app.browser.newTab(QUrl(re.sub("\\\\","/", os.getcwd()+"\\StockFiles\\" + re.sub(".csv", ".html", self.file.split("/")[-1]))))
-	
+	#generate axes
 	def makeAxes(self,column,tables):
 		finalXAxes = []
 		finalYAxes = []
@@ -116,7 +122,7 @@ self.fileContents["Low"][i],self.fileContents["Close"][i],self.fileContents["Adj
 			xaxis = []
 			yaxis = []
 			for j in range(0,len(i),10):
-				xaxis.append(datetime.datetime.strptime(i["Date"][j], '%Y-%m-%d'))#.append(i["Date"][j])
+				xaxis.append(datetime.datetime.strptime(i["Date"][j], '%Y-%m-%d'))
 				if j==0:
 					yaxis.append(i[column][j])
 				else:
