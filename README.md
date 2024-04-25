@@ -6,5 +6,4 @@ The browser is very basic before enabling plug-ins(Still is anyways).
 The goal of this project is to use plug-ins for the different features of the browser,
 since plug-ins can be enabled/disabled this means more plug-ins equals more customizability.
 To launch the browser run the "holygrail-webbrowser.py" file.
-Tensorflow wasn't available in python 3.12 when I made this.
-Recreating the model to work with the new tensorflow.
+Note: AI does not work with tensorflow 
