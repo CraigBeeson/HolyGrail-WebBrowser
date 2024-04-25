@@ -207,7 +207,7 @@ stockModel = tensorflow.keras.Sequential([
 ])
 
 stockModel.compile(loss = tensorflow.keras.losses.MeanSquaredError(), optimizer = tensorflow.keras.optimizers.Adam(learning_rate = .00003), metrics = ['mae'])
-stockModel.fit(trainingFeatures, trainingLabels, epochs=3000,validation_data = (testFeatures,testLabels),
+stockModel.fit(trainingFeatures, trainingLabels, epochs=300,validation_data = (testFeatures,testLabels),
 	batch_size = 32)
 stockModel.summary()
-stockModel.save("AI/Stock.ai")
+stockModel.save("AI/Stock.keras")
