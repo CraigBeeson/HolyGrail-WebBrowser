@@ -14,7 +14,7 @@ sys.modules['NeuralNetwork'] = NeuralNetwork
 toolTip = "View data\n analytics of\n stocks."
 
 #AI is loaded here to prevent having to load with every use, just a little more efficient
-stockModel = tensorflow.keras.models.load_model(os.getcwd() + "\\plugins\\stockmarketanalysis\\AI\\Stock.ai")
+stockModel = tensorflow.keras.models.load_model(os.getcwd() + "\\plugins\\stockmarketanalysis\\AI\\Stock.keras")
 
 def main(HolyGrail):
 	if not os.path.isdir(os.getcwd()+"\\StockFiles"):
