@@ -11,6 +11,7 @@ class EditorDock(QDockWidget):
 		self.tabs = tabbedEditor.tabbedEditor(self,objectName="Editor")
 		self.tabs.filePath = self.parent().UtilityFuncs.getSetting("EditorFilePath")
 		self.tabs.updateFilePath.connect(self.updateFP)
+		self.setAttribute(Qt.WA_DeleteOnClose)
 		#stuff to display the tabs
 		box = QVBoxLayout()
 		box.addWidget(self.tabs)
