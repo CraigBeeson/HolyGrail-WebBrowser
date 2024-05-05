@@ -1,0 +1,34 @@
+html,body {
+	height: 100%;
+	background-color: #051015;
+}
+.column {
+	text-align: center;
+	float: left;
+	width: auto;
+	height: 100%;
+	font-size: larger;
+	background-color: #204060;
+}
+a:link {
+	color: darkorange;
+}
+a:hover {
+	color: hotpink;
+}
+a:active {
+	color: lightblue;
+}
+.column1 {
+	float: left;
+	width: 80%;
+	height: 100%;
+	color: #708090;
+	font-size: xx-large;
+	background-color: #102030;
+	text-align: center;
+}
+.column1-text {
+	transform: translateY(100%);
+}
+/* Clear floats after the columns */

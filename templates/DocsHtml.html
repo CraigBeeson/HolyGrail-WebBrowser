@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<title>HolyGrail Documents</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/DocsCSS.css') }}">
+	<body>
+		<div class="column">
+			{%for Plugins in plugins%}
+				<a href={{"http://127.0.0.1:5000/documents/"~Plugins[0]}}>{{Plugins[1]}}</a><br>
+			{%endfor%}
+		</div>
+		<div class="column1">
+			<div class="column1-text">
+				{{desc}}
+			</div>
+		</div>
+	</body>
+</html>

@@ -2,13 +2,17 @@ import sys
 import re
 import TabbedBrowser
 import Utility
+import threading
+
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
+
 import importlib
 import pkgutil
 import os
 
+import Docs
 import plugins
 
 class MainWindow(QMainWindow):
@@ -177,6 +181,8 @@ class MainWindow(QMainWindow):
 		self.closing.emit()
 		QMainWindow().closeEvent(event)
 
+flaskThread = threading.Thread(target=Docs.FlaskApp,daemon=True)
+flaskThread.start()
 app = QApplication(sys.argv)
 QApplication.setApplicationName('Holy Grail - Web Browser')
 window = MainWindow()
