@@ -1,9 +1,10 @@
+Flask==3.0.3
 keras==3.0.4
 matplotlib==3.8.2
 numpy==1.26.4
 pandas==2.2.2
 PyQt5==5.15.10
 PyQt5_sip==12.12.2
-Requests==2.31.0
+scipy==1.13.0
 tensorflow==2.16.1
 tensorflow_intel==2.16.1
