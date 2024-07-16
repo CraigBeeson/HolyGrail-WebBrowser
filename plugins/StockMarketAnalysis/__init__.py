@@ -8,8 +8,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from . import Search
-from . import NeuralNetwork
-sys.modules['NeuralNetwork'] = NeuralNetwork
 
 toolTip = "View data\n analytics of\n stocks."
 
